@@ -25,8 +25,17 @@ routes.get("/books", async (req,res) => {
 })
 
 //Add NEW Book
-routes.post("/books", (req, res) => {
-    res.send({message: "Add NEW Book"})
+routes.post("/books", async(req, res) => {
+    try{
+        const newBook = new Book({
+            ...req.body
+        })
+        await newBook.save()
+        res.status(200).send(newBook)
+    }catch(error){
+        res.status(500).send(error)
+    }
+    //res.send({message: "Add NEW Book"})
 })
 
 //Update existing Book By Id
@@ -35,8 +44,18 @@ routes.post("/book/:bookid", (req, res) => {
 })
 
 //Delete Book By ID
-routes.delete("/book/:bookid", (req, res) => {
-    res.send({message: "Delete Book By ID"})
+routes.delete("/book/:bookid", async(req, res) => {
+    try{
+        const book = await Book.deleteOne({_id : req.params.bookid})
+        if(!book){
+            res.status(200).send({message : "Book not found"})
+        }else{
+            res.status(200).send(book)
+        }
+    }catch(error){
+        res.status(500).send(error)
+    }
+    
 })
 
 //Get Book By ID
