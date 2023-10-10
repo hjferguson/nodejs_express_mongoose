@@ -1,10 +1,27 @@
 const express = require("express")
-
+const Book = require('../models/Books.js');
 const routes = express.Router()
 
 //Get All Books
-routes.get("/books", (req, res) => {
-    res.send({message: "Get All Books"})
+// routes.get("/books", async (req, res) => {
+//     try {
+//         const allBooks = await Book.find();
+//         res.send({ books: allBooks });
+//     } catch (err) {
+//         res.status(500).send({ message: 'Could not fetch books', error: err });
+//     }
+// });
+
+routes.get("/books", async (req,res) => {
+    
+    try{
+        const bookList = await Book.find({});
+        res.status(200).send(bookList);
+    }catch(error){
+        res.status(500).send(error)
+    }
+
+
 })
 
 //Add NEW Book
